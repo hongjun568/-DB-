@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="명함등록">
+<meta name="theme-color" content="#2d5be3">
+<title>명함 등록 | 피플센터</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --primary: #1a1a1a;
+    --accent: #2d5be3;
+    --accent-light: #eef1fd;
+    --muted: #888;
+    --success: #1e8a5e;
+    --success-bg: #eaf5f0;
+    --error: #c0392b;
+    --radius: 12px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--primary);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+  .header { text-align: center; margin-bottom: 24px; padding-top: 8px; max-width: 480px; margin-left:auto; margin-right:auto; }
+  .header .logo { font-size: 11px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 6px; }
+  .header p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .submitter-pill {
+    display: none;
+    max-width: 480px; margin: 0 auto 16px;
+    background: var(--accent-light);
+    border-radius: 40px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--accent);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .submitter-pill.show { display: flex; }
+  .submitter-pill button {
+    background: none; border: none; color: var(--accent);
+    font-size: 11px; cursor: pointer; text-decoration: underline;
+    font-family: inherit;
+  }
+
+  .card {
+    background: var(--surface); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 22px 20px;
+    margin-bottom: 12px; max-width: 480px;
+    margin-left: auto; margin-right: auto;
+  }
+  .card-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 6px;
+  }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--accent-light); }
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
+  .field label .req { color: var(--accent); margin-left: 2px; }
+  .field input, .field textarea {
+    width: 100%; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px; color: var(--primary);
+    background: var(--bg); border: 1.5px solid transparent;
+    border-radius: 8px; padding: 11px 13px; outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--accent); background: #fff; }
+  .field input.error, .field textarea.error { border-color: var(--error); }
+  .field textarea { resize: none; min-height: 80px; line-height: 1.6; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .submit-btn {
+    width: 100%; max-width: 480px; margin: 8px auto 0; display: block;
+    background: var(--accent); color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px; font-weight: 700;
+    border: none; border-radius: var(--radius); padding: 16px;
+    cursor: pointer;
+  }
+  .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .toast {
+    display: none; position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%); background: var(--primary); color: #fff;
+    font-size: 13px; padding: 12px 22px; border-radius: 40px;
+    white-space: nowrap; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  }
+  .toast.error-toast { background: var(--error); }
+
+  .success-screen { display: none; text-align: center; padding: 48px 24px; max-width: 480px; margin: 0 auto; }
+  .success-icon {
+    width: 64px; height: 64px; background: var(--success-bg);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 20px; font-size: 28px;
+  }
+  .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .add-more-btn {
+    margin-top: 28px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--accent);
+    background: var(--accent-light); border: none;
+    border-radius: 8px; padding: 10px 22px; cursor: pointer;
+  }
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle; margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="form-wrap">
+  <div class="header">
+    <div class="logo">People Center</div>
+    <h1>명함 등록</h1>
+    <p>받으신 명함 정보를 입력해 주세요.<br>입력된 정보는 사내 DB에 저장됩니다.</p>
+  </div>
+
+  <div class="submitter-pill" id="submitter-pill">
+    <span>👤 등록자: <strong id="submitter-display"></strong></span>
+    <button onclick="changeSubmitter()">변경</button>
+  </div>
+
+  <div class="card" id="submitter-card">
+    <div class="card-title">본인 확인</div>
+    <div class="field">
+      <label>등록자 이름 <span class="req">*</span></label>
+      <input type="text" id="submitter" placeholder="본인 이름 (1회만 입력)" />
+      <div style="font-size:11px;color:var(--muted);margin-top:5px;">
+        ※ 한 번 저장하면 다음부터 자동 입력됩니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">명함 정보</div>
+    <div class="field">
+      <label>회사명 <span class="req">*</span></label>
+      <input type="text" id="company" placeholder="(주)예시회사" />
+    </div>
+    <div class="field">
+      <label>이름 <span class="req">*</span></label>
+      <input type="text" id="name" placeholder="홍길동" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>부서</label>
+        <input type="text" id="dept" placeholder="인사팀" />
+      </div>
+      <div class="field">
+        <label>직급</label>
+        <input type="text" id="title" placeholder="차장" />
+      </div>
+    </div>
+    <div class="field">
+      <label>전화번호</label>
+      <input type="tel" id="phone" placeholder="010-1234-5678" inputmode="tel" />
+    </div>
+    <div class="field">
+      <label>이메일</label>
+      <input type="email" id="email" placeholder="example@company.com" inputmode="email" />
+    </div>
+    <div class="field">
+      <label>메모</label>
+      <textarea id="memo" placeholder="명함을 받은 맥락, 특이사항 등을 자유롭게 메모하세요."></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="submitForm()">등록하기</button>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <h2>등록 완료!</h2>
+  <p>명함 정보가 성공적으로 저장되었습니다.<br>피플센터에서 확인할 수 있습니다.</p>
+  <button class="add-more-btn" onclick="resetForm()">+ 다른 명함 추가 등록</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚠️⚠️⚠️ 아래 줄의 URL을 본인 Apps Script URL로 반드시 교체하세요! ⚠️⚠️⚠️
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsBv9I1G2Xn9llB0Vs8SclOvdCo5kZi5k9baHh3F1FBc3bLgilbzY0RxAyuV95LN8U/exec';
+
+  const STORAGE_KEY = 'bizcard-submitter-name';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem(STORAGE_KEY);
+    if (savedName) showSubmitterPill(savedName);
+  });
+
+  function showSubmitterPill(name) {
+    document.getElementById('submitter-card').style.display = 'none';
+    document.getElementById('submitter-display').textContent = name;
+    document.getElementById('submitter-pill').classList.add('show');
+  }
+
+  function changeSubmitter() {
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById('submitter-card').style.display = 'block';
+    document.getElementById('submitter-pill').classList.remove('show');
+    document.getElementById('submitter').value = '';
+    document.getElementById('submitter').focus();
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + (type || '');
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 3000);
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = on;
+    btn.innerHTML = on ? '<span class="spinner"></span>저장 중...' : '등록하기';
+  }
+
+  async function submitForm() {
+    let submitter = localStorage.getItem(STORAGE_KEY);
+    if (!submitter) {
+      submitter = document.getElementById('submitter').value.trim();
+      if (!submitter) {
+        document.getElementById('submitter').classList.add('error');
+        showToast('등록자 이름을 입력해 주세요.', 'error-toast');
+        return;
+      }
+    }
+
+    const company = document.getElementById('company').value.trim();
+    const name    = document.getElementById('name').value.trim();
+
+    let hasError = false;
+    [['company', company], ['name', name]].forEach(function(pair) {
+      const el = document.getElementById(pair[0]);
+      if (!pair[1]) { el.classList.add('error'); hasError = true; }
+      else el.classList.remove('error');
+    });
+    if (hasError) { showToast('회사명과 이름은 필수입니다.', 'error-toast'); return; }
+
+    const data = {
+      submitter: submitter,
+      company: company,
+      name: name,
+      dept   : document.getElementById('dept').value.trim(),
+      title  : document.getElementById('title').value.trim(),
+      phone  : document.getElementById('phone').value.trim(),
+      email  : document.getElementById('email').value.trim(),
+      memo   : document.getElementById('memo').value.trim()
+    };
+
+    setLoading(true);
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        localStorage.setItem(STORAGE_KEY, submitter);
+      }
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo(0, 0);
+    } catch (e) {
+      showToast('저장 중 오류가 발생했습니다. 다시 시도해 주세요.', 'error-toast');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetForm() {
+    ['company','name','dept','title','phone','email','memo'].forEach(function(id) {
+      document.getElementById(id).value = '';
+      document.getElementById(id).classList.remove('error');
+    });
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      showSubmitterPill(saved);
+    } else {
+      document.getElementById('submitter').value = '';
+      document.getElementById('submitter-card').style.display = 'block';
+    }
+    document.getElementById('form-wrap').style.display = 'block';
+    document.getElementById('success-screen').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>
