@@ -14,7 +14,6 @@
     --accent-1: #6366f1;
     --accent-2: #8b5cf6;
     --accent-3: #ec4899;
-    --accent-soft: #eef2ff;
     --muted: #6b7280;
     --muted-light: #9ca3af;
     --surface: #ffffff;
@@ -42,14 +41,11 @@
     background-attachment: fixed;
   }
 
-  /* 히어로 영역 */
   .hero {
-    position: relative;
     padding: 40px 20px 30px;
     text-align: center;
     max-width: 520px;
     margin: 0 auto;
-    overflow: hidden;
   }
   .hero-badge {
     display: inline-flex;
@@ -85,11 +81,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .hero p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+  .hero p { font-size: 14px; color: var(--muted); line-height: 1.7; }
   .hero-illust {
     font-size: 44px;
     margin-bottom: 8px;
@@ -101,7 +93,6 @@
     50% { transform: translateY(-6px); }
   }
 
-  /* 안내 박스 */
   .notice {
     max-width: 480px;
     margin: 0 auto 14px;
@@ -122,7 +113,6 @@
   .notice-icon { font-size: 18px; flex-shrink: 0; }
   .notice strong { display: block; font-weight: 700; margin-bottom: 3px; }
 
-  /* 등록자 pill */
   .submitter-pill {
     display: none;
     max-width: 480px;
@@ -151,11 +141,8 @@
     cursor: pointer;
     font-family: inherit;
     font-weight: 500;
-    transition: background 0.2s;
   }
-  .submitter-pill button:hover { background: rgba(255,255,255,0.4); }
 
-  /* 카드 */
   .card {
     background: var(--surface);
     border-radius: var(--radius);
@@ -170,8 +157,6 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .card:nth-child(2) { animation-delay: 0.05s; }
-  .card:nth-child(3) { animation-delay: 0.1s; }
 
   .card-header {
     display: flex;
@@ -196,7 +181,6 @@
   .card-title {
     font-size: 15px;
     font-weight: 700;
-    color: var(--primary);
     letter-spacing: -0.01em;
   }
   .card-subtitle {
@@ -216,11 +200,7 @@
     color: var(--primary);
     margin-bottom: 7px;
   }
-  .field label .field-emoji { font-size: 13px; }
-  .field label .req {
-    color: var(--accent-3);
-    font-weight: 700;
-  }
+  .field label .req { color: var(--accent-3); font-weight: 700; }
   .field input, .field textarea {
     width: 100%;
     font-family: 'Noto Sans KR', sans-serif;
@@ -234,9 +214,7 @@
     transition: all 0.2s;
     -webkit-appearance: none;
   }
-  .field input::placeholder, .field textarea::placeholder {
-    color: var(--muted-light);
-  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--muted-light); }
   .field input:focus, .field textarea:focus {
     border-color: var(--accent-1);
     background: white;
@@ -248,14 +226,7 @@
   }
   .field textarea { resize: none; min-height: 84px; line-height: 1.65; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .field-hint {
-    font-size: 11px;
-    color: var(--muted-light);
-    margin-top: 6px;
-    padding-left: 2px;
-  }
 
-  /* 등록 버튼 */
   .submit-btn {
     width: 100%;
     margin: 20px auto 0;
@@ -265,7 +236,6 @@
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-weight: 700;
-    letter-spacing: -0.01em;
     border: none;
     border-radius: 14px;
     padding: 17px;
@@ -284,18 +254,10 @@
     transition: left 0.6s;
   }
   .submit-btn:hover::before { left: 100%; }
-  .submit-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 12px rgba(99,102,241,0.3);
-  }
-  .submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
+  .submit-btn:active { transform: translateY(1px); box-shadow: 0 3px 12px rgba(99,102,241,0.3); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
   .btn-wrap { padding: 0 16px; max-width: 480px; margin: 0 auto; }
 
-  /* Toast */
   .toast {
     display: none;
     position: fixed;
@@ -321,16 +283,91 @@
     to { opacity: 1; transform: translate(-50%, 0); }
   }
   .toast.error-toast { background: linear-gradient(135deg, #ef4444, #dc2626); }
-  .toast.duplicate-toast { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
-  /* 성공 화면 */
-  .success-screen {
+  .modal-backdrop {
     display: none;
-    text-align: center;
-    padding: 60px 24px;
-    max-width: 480px;
-    margin: 0 auto;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease-out;
   }
+  .modal-backdrop.show { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 26px 26px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes modalPop {
+    0% { opacity: 0; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .modal-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .modal-message {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 22px;
+  }
+  .modal-detail {
+    background: #fef3c7;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: var(--warning-text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .modal-detail strong { display: block; margin-bottom: 4px; font-weight: 700; }
+  .modal-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: white;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+    transition: transform 0.15s;
+  }
+  .modal-btn:active { transform: translateY(1px); }
+
+  .success-screen { display: none; text-align: center; padding: 60px 24px; max-width: 480px; margin: 0 auto; }
   .success-icon-wrap {
     width: 88px; height: 88px;
     margin: 0 auto 24px;
@@ -358,11 +395,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .success-screen p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+  .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.7; }
   .add-more-btn {
     margin-top: 30px;
     font-family: 'Noto Sans KR', sans-serif;
@@ -376,10 +409,7 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .add-more-btn:hover {
-    background: var(--accent-1);
-    color: white;
-  }
+  .add-more-btn:hover { background: var(--accent-1); color: white; }
 
   .spinner {
     display: inline-block;
@@ -393,7 +423,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* 반응형 */
   @media (max-width: 480px) {
     .hero { padding: 32px 20px 24px; }
     .hero h1 { font-size: 24px; }
@@ -406,7 +435,7 @@
 <div id="form-wrap">
   <div class="hero">
     <div class="hero-illust">💼</div>
-    <div class="hero-badge">GSC · People Center</div>
+    <div class="hero-badge">GSC</div>
     <h1>명함 등록</h1>
     <p>받으신 명함을 등록해 주세요.<br>등록된 정보는 사내 인맥 자산이 됩니다.</p>
   </div>
@@ -437,7 +466,7 @@
       </div>
     </div>
     <div class="field">
-      <label><span class="field-emoji">✏️</span> 등록자 이름 <span class="req">*</span></label>
+      <label>✏️ 등록자 이름 <span class="req">*</span></label>
       <input type="text" id="submitter" placeholder="본인 이름을 입력하세요" />
     </div>
   </div>
@@ -451,29 +480,29 @@
       </div>
     </div>
     <div class="field">
-      <label><span class="field-emoji">🏢</span> 회사명 <span class="req">*</span></label>
+      <label>🏢 회사명 <span class="req">*</span></label>
       <input type="text" id="company" placeholder="명함에 기재된 회사명" />
     </div>
     <div class="field">
-      <label><span class="field-emoji">👤</span> 이름 <span class="req">*</span></label>
+      <label>👤 이름 <span class="req">*</span></label>
       <input type="text" id="name" placeholder="홍길동" />
     </div>
     <div class="field-row">
       <div class="field">
-        <label><span class="field-emoji">🗂️</span> 부서</label>
+        <label>🗂️ 부서</label>
         <input type="text" id="dept" placeholder="인사팀" />
       </div>
       <div class="field">
-        <label><span class="field-emoji">🏷️</span> 직급</label>
+        <label>🏷️ 직급</label>
         <input type="text" id="title" placeholder="차장" />
       </div>
     </div>
     <div class="field">
-      <label><span class="field-emoji">📱</span> 전화번호</label>
+      <label>📱 전화번호</label>
       <input type="tel" id="phone" placeholder="010-1234-5678" inputmode="tel" />
     </div>
     <div class="field">
-      <label><span class="field-emoji">✉️</span> 이메일</label>
+      <label>✉️ 이메일</label>
       <input type="email" id="email" placeholder="example@company.com" inputmode="email" />
     </div>
   </div>
@@ -503,10 +532,25 @@
   <button class="add-more-btn" onclick="resetForm()">+ 다른 명함 추가하기</button>
 </div>
 
+<div class="modal-backdrop" id="duplicate-modal">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">이미 등록된 명함입니다</div>
+    <div class="modal-message">
+      동일한 인원이 이미 DB에 존재합니다.<br>
+      정보 수정이 필요한 경우 구글 시트에서 직접 수정해 주세요.
+    </div>
+    <div class="modal-detail">
+      <strong>🔍 중복 판정 기준</strong>
+      회사명, 부서, 이름이 모두 동일한 경우
+    </div>
+    <button class="modal-btn" onclick="closeDuplicateModal()">확인</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-  // ⚠️ 아래 URL을 본인 Apps Script URL로 반드시 교체하세요!
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsBv9I1G2Xn9llB0Vs8SclOvdCo5kZi5k9baHh3F1FBc3bLgilbzY0RxAyuV95LN8U/exec';
 
   const STORAGE_KEY = 'bizcard-submitter-name';
@@ -535,8 +579,15 @@
     t.textContent = msg;
     t.className = 'toast ' + (type || '');
     t.style.display = 'block';
-    const duration = type === 'duplicate-toast' ? 5000 : 3000;
-    setTimeout(() => { t.style.display = 'none'; }, duration);
+    setTimeout(() => { t.style.display = 'none'; }, 3000);
+  }
+
+  function showDuplicateModal() {
+    document.getElementById('duplicate-modal').classList.add('show');
+  }
+
+  function closeDuplicateModal() {
+    document.getElementById('duplicate-modal').classList.remove('show');
   }
 
   function setLoading(on) {
@@ -589,7 +640,7 @@
       const result = await response.json();
 
       if (result.result === 'duplicate') {
-        showToast(result.message, 'duplicate-toast');
+        showDuplicateModal();
         return;
       }
       if (result.result === 'error') {
