@@ -5,198 +5,508 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="명함등록">
-<meta name="theme-color" content="#2d5be3">
-<title>명함 등록 | 피플센터</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#6366f1">
+<title>명함 등록 | GSC</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f4f0;
+    --primary: #1a1a2e;
+    --accent-1: #6366f1;
+    --accent-2: #8b5cf6;
+    --accent-3: #ec4899;
+    --accent-soft: #eef2ff;
+    --muted: #6b7280;
+    --muted-light: #9ca3af;
     --surface: #ffffff;
-    --primary: #1a1a1a;
-    --accent: #2d5be3;
-    --accent-light: #eef1fd;
-    --muted: #888;
-    --success: #1e8a5e;
-    --success-bg: #eaf5f0;
-    --error: #c0392b;
-    --radius: 12px;
-    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --border: #e5e7eb;
+    --success: #10b981;
+    --success-bg: #d1fae5;
+    --warning-bg: #fef3c7;
+    --warning-text: #92400e;
+    --error: #ef4444;
+    --radius: 16px;
+    --radius-sm: 10px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
     color: var(--primary);
     min-height: 100vh;
-    padding: 24px 16px 60px;
+    padding: 0 0 60px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(139,92,246,0.15), transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(236,72,153,0.10), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(99,102,241,0.12), transparent 50%),
+      linear-gradient(180deg, #fafbff 0%, #f4f4fb 100%);
+    background-attachment: fixed;
   }
-  .header { text-align: center; margin-bottom: 24px; padding-top: 8px; max-width: 480px; margin-left:auto; margin-right:auto; }
-  .header .logo { font-size: 11px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 6px; }
-  .header p { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
+  /* 히어로 영역 */
+  .hero {
+    position: relative;
+    padding: 40px 20px 30px;
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99,102,241,0.1);
+    color: var(--accent-1);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    padding: 6px 14px;
+    border-radius: 40px;
+    margin-bottom: 16px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent-1);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .hero-illust {
+    font-size: 44px;
+    margin-bottom: 8px;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* 안내 박스 */
+  .notice {
+    max-width: 480px;
+    margin: 0 auto 14px;
+    padding: 0 16px;
+  }
+  .notice-inner {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: var(--warning-text);
+    line-height: 1.65;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    box-shadow: 0 2px 12px rgba(251,191,36,0.15);
+  }
+  .notice-icon { font-size: 18px; flex-shrink: 0; }
+  .notice strong { display: block; font-weight: 700; margin-bottom: 3px; }
+
+  /* 등록자 pill */
   .submitter-pill {
     display: none;
-    max-width: 480px; margin: 0 auto 16px;
-    background: var(--accent-light);
+    max-width: 480px;
+    margin: 0 auto 14px;
+    padding: 0 16px;
+  }
+  .submitter-pill.show { display: block; }
+  .submitter-pill-inner {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: white;
     border-radius: 40px;
-    padding: 8px 14px;
-    font-size: 12px;
-    color: var(--accent);
+    padding: 10px 16px;
+    font-size: 13px;
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.25);
   }
-  .submitter-pill.show { display: flex; }
   .submitter-pill button {
-    background: none; border: none; color: var(--accent);
-    font-size: 11px; cursor: pointer; text-decoration: underline;
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: white;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
     font-family: inherit;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .submitter-pill button:hover { background: rgba(255,255,255,0.4); }
+
+  /* 카드 */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    margin: 0 auto 14px;
+    max-width: 480px;
+    box-shadow: 0 4px 24px rgba(31,41,55,0.05), 0 1px 2px rgba(31,41,55,0.04);
+    border: 1px solid rgba(255,255,255,0.8);
+    animation: slideUp 0.4s ease-out backwards;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(2) { animation-delay: 0.05s; }
+  .card:nth-child(3) { animation-delay: 0.1s; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .card-icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .card-icon.i1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .card-icon.i2 { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+  .card-icon.i3 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+  .card-subtitle {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
   }
 
-  .card {
-    background: var(--surface); border-radius: var(--radius);
-    box-shadow: var(--shadow); padding: 22px 20px;
-    margin-bottom: 12px; max-width: 480px;
-    margin-left: auto; margin-right: auto;
-  }
-  .card-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--accent);
-    margin-bottom: 16px; display: flex; align-items: center; gap: 6px;
-  }
-  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--accent-light); }
-  .field { margin-bottom: 14px; }
+  .field { margin-bottom: 16px; }
   .field:last-child { margin-bottom: 0; }
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
-  .field label .req { color: var(--accent); margin-left: 2px; }
+  .field label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 7px;
+  }
+  .field label .field-emoji { font-size: 13px; }
+  .field label .req {
+    color: var(--accent-3);
+    font-weight: 700;
+  }
   .field input, .field textarea {
-    width: 100%; font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px; color: var(--primary);
-    background: var(--bg); border: 1.5px solid transparent;
-    border-radius: 8px; padding: 11px 13px; outline: none;
-    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    color: var(--primary);
+    background: #f9fafb;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    outline: none;
+    transition: all 0.2s;
     -webkit-appearance: none;
   }
-  .field input:focus, .field textarea:focus { border-color: var(--accent); background: #fff; }
-  .field input.error, .field textarea.error { border-color: var(--error); }
-  .field textarea { resize: none; min-height: 80px; line-height: 1.6; }
+  .field input::placeholder, .field textarea::placeholder {
+    color: var(--muted-light);
+  }
+  .field input:focus, .field textarea:focus {
+    border-color: var(--accent-1);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+  }
+  .field input.error, .field textarea.error {
+    border-color: var(--error);
+    background: #fef2f2;
+  }
+  .field textarea { resize: none; min-height: 84px; line-height: 1.65; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field-hint {
+    font-size: 11px;
+    color: var(--muted-light);
+    margin-top: 6px;
+    padding-left: 2px;
+  }
 
+  /* 등록 버튼 */
   .submit-btn {
-    width: 100%; max-width: 480px; margin: 8px auto 0; display: block;
-    background: var(--accent); color: #fff;
+    width: 100%;
+    margin: 20px auto 0;
+    display: block;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: white;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px; font-weight: 700;
-    border: none; border-radius: var(--radius); padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    border: none;
+    border-radius: 14px;
+    padding: 17px;
     cursor: pointer;
+    box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
   }
-  .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
-  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+  }
+  .submit-btn:hover::before { left: 100%; }
+  .submit-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 12px rgba(99,102,241,0.3);
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-wrap { padding: 0 16px; max-width: 480px; margin: 0 auto; }
 
+  /* Toast */
   .toast {
-    display: none; position: fixed; bottom: 28px; left: 50%;
-    transform: translateX(-50%); background: var(--primary); color: #fff;
-    font-size: 13px; padding: 12px 22px; border-radius: 40px;
-    white-space: nowrap; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 14px 22px;
+    border-radius: 14px;
+    max-width: 90%;
+    text-align: center;
+    line-height: 1.6;
+    z-index: 999;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    white-space: pre-line;
+    animation: slideInUp 0.3s ease-out;
   }
-  .toast.error-toast { background: var(--error); }
+  @keyframes slideInUp {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  .toast.error-toast { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .toast.duplicate-toast { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
-  .success-screen { display: none; text-align: center; padding: 48px 24px; max-width: 480px; margin: 0 auto; }
-  .success-icon {
-    width: 64px; height: 64px; background: var(--success-bg);
-    border-radius: 50%; display: flex; align-items: center;
-    justify-content: center; margin: 0 auto 20px; font-size: 28px;
+  /* 성공 화면 */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+    max-width: 480px;
+    margin: 0 auto;
   }
-  .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .success-icon-wrap {
+    width: 88px; height: 88px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+    box-shadow: 0 10px 40px rgba(16,185,129,0.4);
+    animation: successPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes successPop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .success-screen h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .success-screen p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
   .add-more-btn {
-    margin-top: 28px; font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px; font-weight: 500; color: var(--accent);
-    background: var(--accent-light); border: none;
-    border-radius: 8px; padding: 10px 22px; cursor: pointer;
+    margin-top: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-1);
+    background: white;
+    border: 2px solid var(--accent-1);
+    border-radius: 40px;
+    padding: 12px 26px;
+    cursor: pointer;
+    transition: all 0.2s;
   }
+  .add-more-btn:hover {
+    background: var(--accent-1);
+    color: white;
+  }
+
   .spinner {
-    display: inline-block; width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
-    border-radius: 50%; animation: spin 0.6s linear infinite;
-    vertical-align: middle; margin-right: 6px;
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 반응형 */
+  @media (max-width: 480px) {
+    .hero { padding: 32px 20px 24px; }
+    .hero h1 { font-size: 24px; }
+    .card { border-radius: 14px; padding: 20px 18px; }
+  }
 </style>
 </head>
 <body>
 
 <div id="form-wrap">
-  <div class="header">
-    <div class="logo">People Center</div>
+  <div class="hero">
+    <div class="hero-illust">💼</div>
+    <div class="hero-badge">GSC · People Center</div>
     <h1>명함 등록</h1>
-    <p>받으신 명함 정보를 입력해 주세요.<br>입력된 정보는 사내 DB에 저장됩니다.</p>
+    <p>받으신 명함을 등록해 주세요.<br>등록된 정보는 사내 인맥 자산이 됩니다.</p>
+  </div>
+
+  <div class="notice">
+    <div class="notice-inner">
+      <span class="notice-icon">💡</span>
+      <div>
+        <strong>기존 인원 정보 변경 시</strong>
+        여기서 다시 입력하지 마시고, <b>구글 시트에서 직접 수정</b>해 주세요.
+      </div>
+    </div>
   </div>
 
   <div class="submitter-pill" id="submitter-pill">
-    <span>👤 등록자: <strong id="submitter-display"></strong></span>
-    <button onclick="changeSubmitter()">변경</button>
+    <div class="submitter-pill-inner">
+      <span>👤 등록자: <strong id="submitter-display"></strong></span>
+      <button onclick="changeSubmitter()">변경</button>
+    </div>
   </div>
 
   <div class="card" id="submitter-card">
-    <div class="card-title">본인 확인</div>
-    <div class="field">
-      <label>등록자 이름 <span class="req">*</span></label>
-      <input type="text" id="submitter" placeholder="본인 이름 (1회만 입력)" />
-      <div style="font-size:11px;color:var(--muted);margin-top:5px;">
-        ※ 한 번 저장하면 다음부터 자동 입력됩니다.
+    <div class="card-header">
+      <div class="card-icon i1">👋</div>
+      <div>
+        <div class="card-title">본인 확인</div>
+        <div class="card-subtitle">한 번만 입력하면 자동 저장돼요</div>
       </div>
+    </div>
+    <div class="field">
+      <label><span class="field-emoji">✏️</span> 등록자 이름 <span class="req">*</span></label>
+      <input type="text" id="submitter" placeholder="본인 이름을 입력하세요" />
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">명함 정보</div>
-    <div class="field">
-      <label>회사명 <span class="req">*</span></label>
-      <input type="text" id="company" placeholder="(주)예시회사" />
+    <div class="card-header">
+      <div class="card-icon i2">📇</div>
+      <div>
+        <div class="card-title">명함 정보</div>
+        <div class="card-subtitle">필수 항목만 입력해도 저장됩니다</div>
+      </div>
     </div>
     <div class="field">
-      <label>이름 <span class="req">*</span></label>
+      <label><span class="field-emoji">🏢</span> 회사명 <span class="req">*</span></label>
+      <input type="text" id="company" placeholder="명함에 기재된 회사명" />
+    </div>
+    <div class="field">
+      <label><span class="field-emoji">👤</span> 이름 <span class="req">*</span></label>
       <input type="text" id="name" placeholder="홍길동" />
     </div>
     <div class="field-row">
       <div class="field">
-        <label>부서</label>
+        <label><span class="field-emoji">🗂️</span> 부서</label>
         <input type="text" id="dept" placeholder="인사팀" />
       </div>
       <div class="field">
-        <label>직급</label>
+        <label><span class="field-emoji">🏷️</span> 직급</label>
         <input type="text" id="title" placeholder="차장" />
       </div>
     </div>
     <div class="field">
-      <label>전화번호</label>
+      <label><span class="field-emoji">📱</span> 전화번호</label>
       <input type="tel" id="phone" placeholder="010-1234-5678" inputmode="tel" />
     </div>
     <div class="field">
-      <label>이메일</label>
+      <label><span class="field-emoji">✉️</span> 이메일</label>
       <input type="email" id="email" placeholder="example@company.com" inputmode="email" />
-    </div>
-    <div class="field">
-      <label>메모</label>
-      <textarea id="memo" placeholder="명함을 받은 맥락, 특이사항 등을 자유롭게 메모하세요."></textarea>
     </div>
   </div>
 
-  <button class="submit-btn" id="submit-btn" onclick="submitForm()">등록하기</button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon i3">📝</div>
+      <div>
+        <div class="card-title">메모</div>
+        <div class="card-subtitle">기억할 만한 정보를 자유롭게</div>
+      </div>
+    </div>
+    <div class="field">
+      <textarea id="memo" placeholder="예) OO 컨퍼런스에서 만남, AI 교육 사업 관심"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">등록하기 ✨</button>
+  </div>
 </div>
 
 <div class="success-screen" id="success-screen">
-  <div class="success-icon">✅</div>
+  <div class="success-icon-wrap">✓</div>
   <h2>등록 완료!</h2>
-  <p>명함 정보가 성공적으로 저장되었습니다.<br>피플센터에서 확인할 수 있습니다.</p>
-  <button class="add-more-btn" onclick="resetForm()">+ 다른 명함 추가 등록</button>
+  <p>명함 정보가 성공적으로 저장되었습니다.<br>GSC 명함 DB에서 확인할 수 있어요.</p>
+  <button class="add-more-btn" onclick="resetForm()">+ 다른 명함 추가하기</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // ⚠️⚠️⚠️ 아래 줄의 URL을 본인 Apps Script URL로 반드시 교체하세요! ⚠️⚠️⚠️
+  // ⚠️ 아래 URL을 본인 Apps Script URL로 반드시 교체하세요!
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsBv9I1G2Xn9llB0Vs8SclOvdCo5kZi5k9baHh3F1FBc3bLgilbzY0RxAyuV95LN8U/exec';
 
   const STORAGE_KEY = 'bizcard-submitter-name';
@@ -225,13 +535,14 @@
     t.textContent = msg;
     t.className = 'toast ' + (type || '');
     t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
+    const duration = type === 'duplicate-toast' ? 5000 : 3000;
+    setTimeout(() => { t.style.display = 'none'; }, duration);
   }
 
   function setLoading(on) {
     const btn = document.getElementById('submit-btn');
     btn.disabled = on;
-    btn.innerHTML = on ? '<span class="spinner"></span>저장 중...' : '등록하기';
+    btn.innerHTML = on ? '<span class="spinner"></span>저장 중...' : '등록하기 ✨';
   }
 
   async function submitForm() {
@@ -269,12 +580,22 @@
 
     setLoading(true);
     try {
-      await fetch(SCRIPT_URL, {
+      const response = await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
+        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       });
+      const result = await response.json();
+
+      if (result.result === 'duplicate') {
+        showToast(result.message, 'duplicate-toast');
+        return;
+      }
+      if (result.result === 'error') {
+        showToast('오류: ' + result.message, 'error-toast');
+        return;
+      }
       if (!localStorage.getItem(STORAGE_KEY)) {
         localStorage.setItem(STORAGE_KEY, submitter);
       }
